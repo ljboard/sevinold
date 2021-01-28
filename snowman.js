@@ -79,7 +79,8 @@ function draw() {
 
 
     //happy sevinold day
-    textSize(32);
+    textSize(9);
+    textFont("monospace");
     fill (43, 62, 133);
     text('Happy Sevinold Day', mouseX, mouseY);
 }
