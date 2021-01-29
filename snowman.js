@@ -21,20 +21,81 @@ var carrotR= 255;
 var carrotG= 143;
 var carrotB= 28;
 
+// trees
+var treePositions = Array(10).fill(0)
 
 //setting landscape
 function setup() {
     createCanvas(480, 640);
+    setTreePositionValues()
+}
+
+function setTreePositionValues() {
+    for (i=0; i<treePositions.length; i++) {
+        treePositions[i] = random(0, 1)
+    }
+
+}
+
+// drawing the randomized background trees
+function drawTrees() {
+    // draw background trees
+    for (i=0; i<15; i++) {
+        stroke(200);
+        strokeWeight(15)
+        let treeX = width / 15 * i
+        line(treeX, 0, treeX, height);
+    }
+
+    for (i=0; i<treePositions.length; i++) {
+        let closeness = treePositions[i];
+        let trunkWidth = 40 * closeness;
+        let greyscale = 50 + 150 * (1 - closeness);
+
+        // draw tree trunk
+        // strokeCap(SQUARE);
+        stroke(greyscale);
+        strokeWeight(trunkWidth)
+        let treeX = width / treePositions.length * (i+1)
+        line(treeX, 0, treeX, height);
+
+        // draw branches, if the tree is close
+        if (i % 2 == 0) {
+            // susie this part is EXTREMELY hacky, pls dont read it
+            // i was too lazy to set up more variables to store random values for the branch locations/lengths
+            // so let's just use the fact that javascript's random() gives us a float
+            // and grab some random values from the tree's closeness float itself
+            let numberOfBranches = int(closeness * 4)
+            var anotherRandomValue = closeness * 10
+            for (j=0; j<numberOfBranches; j++) {
+                strokeWeight(trunkWidth / 6)
+                let startY = height / numberOfBranches * (j + 1) / 3
+                let endY = startY - anotherRandomValue * 5
+                let branchLength = trunkWidth
+                if (int(anotherRandomValue) % 2 == 0) {
+                    line(treeX, startY, treeX-branchLength, startY-branchLength)
+                } else if (int(anotherRandomValue) % 2 == 1) {
+                    line(treeX, startY, treeX+branchLength, startY-branchLength)
+                }
+                anotherRandomValue *= 10
+                anotherRandomValue %= 10
+            }
+        }
+    }
 }
 
 
 //setting base snowman
 function draw() {
     noStroke();
-    //skyRandom+Ground
+    //skyRandom
     background(cR, cG, cB);
+    // trees
+    drawTrees();
+    // ground
+    noStroke()
     fill(255);
-    ellipse(240,640,800,600);
+    ellipse(width/2,640,1200,600);
     //snowmanSHADOW
     fill(240, 246, 247,95);
     ellipse(width/2,(height/2)+bodyHeight/2,bodyHeight,bodyWidth);
@@ -82,10 +143,10 @@ function draw() {
     textSize(9);
     textFont("monospace");
     fill (43, 62, 133);
-    text('Happy Sevinold Day', mouseX, mouseY);
+    text('Happy Belated Sevinold Day', mouseX, mouseY);
 }
 
-function mousePressed(){
+function mousePressed() {
 	cR=random(220,240);
 	cG=random(230,240);
 	cB=random(230, 245);
@@ -99,4 +160,5 @@ function mousePressed(){
     carrotG=random(140,200);
     carrotB=random(25,60);
 
+    setTreePositionValues()
 }
